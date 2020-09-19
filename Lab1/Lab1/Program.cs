@@ -2,32 +2,44 @@
 using System.IO;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
-
 namespace Lab1
 {
     class Program
     {
+        private delegate void _methodToExecute(string table, MySqlCommand query);
+
         private const string _host = "localhost";
         private const string _database = "photo_studio";
         private const string _user = "root";
         private const string _password = "";
 
-
-        private delegate void methodToExecute(string table, MySqlCommand query);
         private MySqlConnection _connection;
 
         private string[] _tables = { "clients", "options", "orders"};
 
 
-        private void makeConnection()
+        public void ReadAll()
+        {
+            MakeForAllTables(ReadTable);
+        }
+
+        public void UpAll()
+        {
+            MakeForAllTables(UpTable);
+        }
+
+        public void DownAll()
+        {
+            MakeForAllTables(DownTable);
+        }
+
+        private void MakeConnection()
         {
             string connection_string = $"Database={_database};Datasource={_host};User={_user};Pasword={_password}";
             _connection = new MySqlConnection(connection_string);
         }
 
-
-       
-        private void makeForAllTables(methodToExecute method)
+        private void MakeForAllTables(_methodToExecute method)
         {
             try
             {
@@ -66,7 +78,15 @@ namespace Lab1
 
                     foreach(object ob in objects)
                     {
-                        Console.WriteLine(ob.ToString());
+
+                        if (ob is System.Byte[])
+                        {
+                            Console.WriteLine(System.Text.Encoding.UTF8.GetString(ob as System.Byte[]));
+                        }
+                        else
+                        {
+                            Console.WriteLine(ob.ToString());
+                        }
                     }
                     Console.WriteLine();
                 }
@@ -84,11 +104,22 @@ namespace Lab1
         private void UpTable(string table, MySqlCommand query)
         {
             MySqlDataReader reader = default;
-            foreach (var line in readFromFile($@"../../../../{table}.txt"))
+            foreach (var line in ReadFromFile($@"../../../../{table}.txt"))
             {
                 try
-                {
-                    string row = string.Join(',', line);
+                { 
+                
+                    string row = default;
+                    if (table == "orders")
+                    {
+                        string guid = Guid.NewGuid().ToString();
+                        row = $"'{guid}',{string.Join(',', line)}";
+                    }
+                    else
+                    {
+                        row = $"{string.Join(',', line)}";
+                    }
+
                     query.CommandText = $"INSERT INTO {table} VALUES({row})";
                     reader = query.ExecuteReader();
                 }
@@ -121,22 +152,9 @@ namespace Lab1
             }
         }
 
-        public void ReadAll()
-        {
-            makeForAllTables(ReadTable);
-        }
 
-        public void UpAll()
-        {
-            makeForAllTables(UpTable);
-        }
 
-        public void DownAll()
-        {
-            makeForAllTables(DownTable);
-        }
-
-        private IEnumerable<string[]> readFromFile(string filepath)
+        private IEnumerable<string[]> ReadFromFile(string filepath)
         {
 
             StreamReader reader = default;
@@ -156,15 +174,13 @@ namespace Lab1
                 if(line.Length > 0) yield return line.Split(';');
             }
 
-            reader.Close();
-            
-            
+            reader.Close(); 
         }
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Program program = new Program();
-            program.makeConnection();
+            program.MakeConnection();
             program.UpAll();
             program.ReadAll();
             program.DownAll();
