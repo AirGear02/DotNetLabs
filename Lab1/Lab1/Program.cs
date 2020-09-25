@@ -8,14 +8,14 @@ namespace Lab1
     {
         private delegate void _methodToExecute(string table, MySqlCommand query);
 
-        private const string _host = "localhost";
-        private const string _database = "photo_studio";
-        private const string _user = "root";
-        private const string _password = "";
+        private const string Host = "localhost";
+        private const string Database = "photo_studio";
+        private const string User = "root";
+        private const string Password = "";
 
         private MySqlConnection _connection;
 
-        private string[] _tables = { "clients", "options", "orders"};
+        private readonly static string[] _tables = { "clients", "options", "orders"};
 
 
         public void ReadAll()
@@ -35,7 +35,7 @@ namespace Lab1
 
         private void MakeConnection()
         {
-            string connection_string = $"Database={_database};Datasource={_host};User={_user};Pasword={_password}";
+            string connection_string = $"Database={Database};Datasource={Host};User={User};Pasword={Password}";
             _connection = new MySqlConnection(connection_string);
         }
 
@@ -104,7 +104,7 @@ namespace Lab1
         private void UpTable(string table, MySqlCommand query)
         {
             MySqlDataReader reader = default;
-            foreach (var line in ReadFromFile($@"../../../../{table}.txt"))
+            foreach (var line in ReadFromFile($@"{table}.txt"))
             {
                 try
                 { 
@@ -139,7 +139,7 @@ namespace Lab1
             MySqlDataReader reader = default;
             try
             {
-                query.CommandText = $"DELETE FROM {table} WHERE true";
+                query.CommandText = $"TRUNCATE TABLE {table}";
                 reader = query.ExecuteReader();
             }
             catch (Exception ex)
