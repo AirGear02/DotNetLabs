@@ -26,12 +26,12 @@ namespace Lab2
         {
             modelBuilder.Entity<Order>()
                 .HasOne(order => order.Client)
-                .WithMany(client => client.Orders)
+                .WithMany(o => o.Orders)
                 .HasForeignKey(order => order.ClientId);
 
             modelBuilder.Entity<Order>()
                 .HasOne(order => order.Option)
-                .WithMany(option => option.Orders)
+                .WithMany(o => o.Orders)
                 .HasForeignKey(order => order.OptionId);
         }
 

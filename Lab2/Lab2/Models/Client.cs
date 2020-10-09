@@ -1,6 +1,7 @@
 ﻿using Lab2.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lab2.Models
 {
@@ -13,7 +14,8 @@ namespace Lab2.Models
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
 
-        public ICollection<Order> Orders { get; set; }
+       [InverseProperty("Client")]
+        public virtual  ICollection<Order> Orders { get; set; }
 
         public void ReadFromStringArray(string[] values)
         {

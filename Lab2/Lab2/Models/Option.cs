@@ -1,6 +1,7 @@
 ﻿using Lab2.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lab2.Models
 {
@@ -10,7 +11,8 @@ namespace Lab2.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
-        public ICollection<Order> Orders { get; set; }
+        [InverseProperty("Option")]
+        public virtual ICollection<Order> Orders { get; set; }
 
         public void ReadFromStringArray(string[] values)
         {

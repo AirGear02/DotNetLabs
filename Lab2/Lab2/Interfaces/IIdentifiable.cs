@@ -6,6 +6,6 @@ namespace Lab2.Interfaces
 {
     interface IIdentifiable
     {
-        public Guid Id { get; set; }
+       Guid Id { get; set; }
     }
 }

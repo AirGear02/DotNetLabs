@@ -1,8 +1,6 @@
 ﻿using Lab2.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lab2.Models
 {
@@ -11,9 +9,11 @@ namespace Lab2.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         public Guid ClientId { get; set; }
+        [ForeignKey("ClientId")]
         public Client Client { get; set; }
         
         public Guid OptionId { get; set; }
+        [ForeignKey("OptionId")]
         public Option Option { get; set; }
 
         public int Quantity { get; set; }

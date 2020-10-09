@@ -6,6 +6,6 @@ namespace Lab2.Interfaces
 {
     interface IReadableFromString
     {
-        public abstract void ReadFromStringArray(string[] values);
+       void ReadFromStringArray(string[] values);
     }
 }

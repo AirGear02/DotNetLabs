@@ -2,7 +2,10 @@
 using Lab2.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Threading;
 
 namespace Lab2
 {
@@ -35,10 +38,42 @@ namespace Lab2
         {
             using (var context = new PhotoStudioContext())
             {
-                PrintTable<Client>("clients", context.Clients);
-                PrintTable<Option>("options", context.Options);
-                PrintTable<Order>("orders", context.Orders);
-            }
+                Console.WriteLine("All clients:");
+                foreach(var client in context.Clients)
+                {
+                  
+                    string[] options = context.Orders
+                        .Where(order => order.ClientId == client.Id)
+                        .Select(order => order.Option.Title)
+                        .ToArray();
+
+                    Console.WriteLine($"Name: {client.Name}, Surname: {client.Surname}, Options: {string.Join(',', options)}");
+                }
+
+                var query = context.Orders.GroupBy(order => order.ClientId).Select(group => new
+                {
+                    ClientId = group.Key,
+                    Count = group.Count()
+                }).Where(group => group.Count >= 2);
+
+                if(query.Count() == 0)
+                {
+                    Console.WriteLine("No clients with more than one orders");
+                    return;
+                }
+
+                Console.WriteLine("\nClients with more than one orders: ");
+                foreach (var element in query)
+                {
+                    var client = context.Clients.Where(client => client.Id == element.ClientId).First();
+
+                    Console.WriteLine($"{client.Name}, {client.Surname}, Orders count: {element.Count}");
+                }
+
+
+                
+                            
+            }   
         }
 
         public void RemoveData()
