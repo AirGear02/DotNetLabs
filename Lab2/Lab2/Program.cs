@@ -38,41 +38,25 @@ namespace Lab2
         {
             using (var context = new PhotoStudioContext())
             {
-                Console.WriteLine("All clients:");
-                foreach(var client in context.Clients)
-                {
-                  
-                    string[] options = context.Orders
-                        .Where(order => order.ClientId == client.Id)
-                        .Select(order => order.Option.Title)
-                        .ToArray();
 
-                    Console.WriteLine($"Name: {client.Name}, Surname: {client.Surname}, Options: {string.Join(',', options)}");
-                }
+                var query = context.Orders
+                    .Join(context.Clients, orders => orders.ClientId, clients => clients.Id,
+                    (o, c) => new { OptionId = o.OptionId, Name = c.Name, Surname = c.Surname })
+                    
+                    .Join(context.Options, c => c.OptionId, o => o.Id, (c, o) => new { Option = o.Title, Name = c.Name, Surname = c.Surname })
+                    .ToList()
+                    .GroupBy(table => new { table.Surname, table.Name })
+                    .Where(g => g.Count() >=2 );
+                
+                   
 
-                var query = context.Orders.GroupBy(order => order.ClientId).Select(group => new
-                {
-                    ClientId = group.Key,
-                    Count = group.Count()
-                }).Where(group => group.Count >= 2);
-
-                if(query.Count() == 0)
-                {
-                    Console.WriteLine("No clients with more than one orders");
-                    return;
-                }
-
-                Console.WriteLine("\nClients with more than one orders: ");
                 foreach (var element in query)
                 {
-                    var client = context.Clients.Where(client => client.Id == element.ClientId).First();
+                    string[] options = element.Select(q => q.Option).ToArray();
 
-                    Console.WriteLine($"{client.Name}, {client.Surname}, Orders count: {element.Count}");
-                }
-
-
-                
-                            
+                    Console.WriteLine($"{element.Key.Name}, {element.Key.Surname}, Ordered Options: {String.Join(',', options)} " +
+                        $"Options Count: {element.Count()}");
+                }           
             }   
         }
 
