@@ -1,0 +1,40 @@
+﻿@page
+@model Lab3.Pages.OptionsModel
+
+@{
+    ViewData["Title"] = "Послуги";
+}
+
+<h1>Послуги</h1>
+
+
+<table class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th>
+                Назва
+            </th>
+            <th>
+                Опис
+            </th>
+            <th>
+                Ціна в грн.
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Option) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,52 @@
+﻿@page
+@model Lab3.Pages.ClientsModel
+
+@{
+    ViewData["Title"] = "Клієнти";
+}
+
+<h1>Клієнти</h1>
+
+<table class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th>
+                Ім'я
+            </th>
+            <th>
+                Прізвище
+            </th>
+            <th>
+                По-батькові
+            </th>
+            <th>
+                Адреса
+            </th>
+            <th>
+               Номер телефону
+            </th>
+           
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Client) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MiddleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
