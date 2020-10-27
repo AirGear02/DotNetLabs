@@ -9,23 +9,20 @@ namespace Lab3
 {
     public class HtmlWriter
     {
-        public static readonly string[] scripts = 
+        public static readonly string[] Scripts = 
         { 
             "/lib/jquery/dist/jquery.min.js",
             "/lib/bootstrap/dist/js/bootstrap.js"
         };
 
-        public static readonly string[] styles =
+        public static readonly string[] Styles =
         {
             "/lib/bootstrap/dist/css/bootstrap.min.css",
             "/css/site.css"
         };
+        public static readonly string HeaderFilePath = @"./wwwroot/header.html";
 
-        private delegate Task _printPageContent(HttpContext context);
-
-        public static readonly string headerFilePath = @"./wwwroot/header.html";
-
-
+        private delegate Task PrintPageContent(HttpContext context);
 
         public static async Task PrintHead(HttpContext context, string title)
         {
@@ -33,7 +30,7 @@ namespace Lab3
             await res.WriteAsync("<head><meta charset=\"utf-8\" />" +
                 "<meta name=\"viewport\" content=\"width = device - width, initial - scale = 1.0\" />");
 
-            foreach(string style in styles)
+            foreach(string style in Styles)
             {
                 await res.WriteAsync($"<link rel=\"stylesheet\" href=\"{style}\" />");
             }
@@ -44,7 +41,7 @@ namespace Lab3
 
         public static async Task PrintHeader(HttpContext context)
         {
-            string[] lines = await File.ReadAllLinesAsync(headerFilePath);
+            string[] lines = await File.ReadAllLinesAsync(HeaderFilePath);
             foreach (string line in lines)
             {
                 await context.Response.WriteAsync(line);
@@ -52,7 +49,7 @@ namespace Lab3
             }
         }
 
-        private static async Task PrintPage(HttpContext context, _printPageContent content)
+        private static async Task PrintPage(HttpContext context, PrintPageContent content)
         {
             await context.Response.WriteAsync("<html>");
 
@@ -61,7 +58,7 @@ namespace Lab3
             await HtmlWriter.PrintHeader(context);
             await context.Response.WriteAsync("<div class=\"container\"><main role = \"main\" class=\"pb-3\">");
             await content(context);
-            foreach(var script in scripts)
+            foreach(var script in Scripts)
             {
                 await context.Response.WriteAsync($"<script src=\"{script}\"></script>");
             }
@@ -69,7 +66,7 @@ namespace Lab3
             await context.Response.WriteAsync("</main></div></body></html>");
         }
 
-        private static async Task printMainPageContent(HttpContext httpContext)
+        private static async Task PrintMainPageContent(HttpContext httpContext)
         {
             using(var context = new PhotoStudioContext() )
             {
@@ -128,7 +125,7 @@ namespace Lab3
             }
         }
 
-        private static async Task printTable(HttpContext httpContext, List<IPrintableToHtmlRow> objects, string[] columnsTitle)
+        private static async Task PrintTable(HttpContext httpContext, List<IPrintableToHtmlRow> objects, string[] columnsTitle)
         {
             {
                 await httpContext.Response.WriteAsync("<table class=\"table table-striped table-dark\"><thead><tr>");
@@ -147,37 +144,37 @@ namespace Lab3
             }
         }
 
-        private static async Task printClientsPage(HttpContext httpContext)
+        private static async Task PrintClientsPage(HttpContext httpContext)
         {
             string[] columns = { "Ім'я", "Прізвище", "По-батькові", "Адреса", "Номер телефону" };            
             using (var context = new PhotoStudioContext())
             {
-                await printTable(httpContext, context.Clients.ToList<IPrintableToHtmlRow>(), columns);
+                await PrintTable(httpContext, context.Clients.ToList<IPrintableToHtmlRow>(), columns);
             } 
         }
 
-        private static async Task printOptionsPage(HttpContext httpContext)
+        private static async Task PrintOptionsPage(HttpContext httpContext)
         {
             string[] columns = { "Назва", "Опис", "Ціна"};
             using (var context = new PhotoStudioContext())
             {
-                await printTable(httpContext, context.Options.ToList<IPrintableToHtmlRow>(), columns);
+                await PrintTable(httpContext, context.Options.ToList<IPrintableToHtmlRow>(), columns);
             }
         }
 
         public static async  Task MainPage(HttpContext context)
         {
-            await PrintPage(context, printMainPageContent);
+            await PrintPage(context, PrintMainPageContent);
         }
 
         public static async Task ClientsPage(HttpContext context)
         {
-            await PrintPage(context, printClientsPage);
+            await PrintPage(context, PrintClientsPage);
         }
 
         public static async Task OptionsPage(HttpContext context)
         {
-            await PrintPage(context, printOptionsPage);
+            await PrintPage(context, PrintOptionsPage);
         }
 
 
