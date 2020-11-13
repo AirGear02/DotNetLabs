@@ -1,0 +1,104 @@
+﻿@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Головна";
+}
+
+
+<div class="text-center">
+
+    @{
+        var query = Model.Context.Orders
+                  .Join(Model.Context.Clients, orders => orders.ClientId, clients => clients.Id,
+                  (o, c) => new
+                  {
+                      OptionId = o.OptionId,
+                      Name = c.Name,
+                      Surname = c.Surname,
+                      Quantity = o.Quantity,
+                      DateStart = o.DateStart,
+                      DateFinish = o.DateFinish,
+                      Id = c.Id
+                  })
+
+                  .Join(Model.Context.Options, c => c.OptionId, o => o.Id, (c, o) => new
+                  {
+                      Option = o.Title,
+                      Name = c.Name,
+                      Surname = c.Surname,
+                      Quantity = c.Quantity,
+                      DateStart = c.DateStart,
+                      DateFinish = c.DateFinish,
+                      Price = c.Quantity * o.Price,
+                      Id = c.Id
+                  })
+                  .ToList()
+                  .GroupBy(table => new { table.Surname, table.Name, table.Id });
+    }
+
+    <div class="row">
+        <div class="col-4">
+            <div class="list-group" id="list-tab" role="tablist">
+                @foreach (var client in query)
+                {
+                    <a class="list-group-item list-group-item-action" id="list-@client.Key.Id-list"
+                       data-toggle="list" href="#list-@client.Key.Id" role="tab"
+                       aria-controls="@client.Key.Id">@client.Key.Name @client.Key.Surname</a>
+                }
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="tab-content" id="nav-tabContent">
+                @foreach (var client in query)
+                {
+                    <div class="tab-pane fade" id="list-@client.Key.Id" role="tabpanel" aria-labelledby="list-@client.Key.Id-list">
+                        <table class="table table-striped table-dark">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Назва послуги
+                                    </th>
+                                    <th>
+                                        Дата замовлення
+                                    </th>
+                                    <th>
+                                        Дата виконанння
+                                    </th>
+                                    <th>
+                                        Ціна
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var option in client)
+                                {
+                                    <tr>
+                                        <td>
+                                            @option.Option
+                                        </td>
+                                        <td>
+                                            @option.DateStart.ToShortDateString()
+                                        </td>
+                                        <td>
+                                            @option.DateFinish.ToShortDateString()
+                                        </td>
+                                        <td>
+                                            @decimal.Round(option.Price, 2)
+                                        </td>
+                                    </tr>
+
+                                }
+                                <tr><td colspan="4">Загальна кількість замовлень: @client.Count()</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                }
+            </div>
+        </div>
+
+    </div>
+
+</div>

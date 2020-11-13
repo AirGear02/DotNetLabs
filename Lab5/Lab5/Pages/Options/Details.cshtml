@@ -1,0 +1,37 @@
+﻿@page
+@model Lab5.Pages.Options.DetailsModel
+
+@{
+    ViewData["Title"] = "Деталі послуги";
+}
+
+<h1>Деталі послуги</h1>
+
+<div>
+    <h4>Option</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Option.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Option.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Option.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Option.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Option.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Option.Price)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Option.Id">Редагувати</a> |
+    <a asp-page="./Index">Назад до списку послуг</a>
+</div>

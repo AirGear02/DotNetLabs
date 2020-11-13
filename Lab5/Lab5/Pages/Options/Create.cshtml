@@ -1,0 +1,43 @@
+﻿@page
+@model Lab5.Pages.Options.CreateModel
+
+@{
+    ViewData["Title"] = "Створення послуги";
+}
+
+
+<h4>Створити послугу</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Option.Title" class="control-label"></label>
+                <input asp-for="Option.Title" class="form-control" />
+                <span asp-validation-for="Option.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Option.Description" class="control-label"></label>
+                <input asp-for="Option.Description" class="form-control" />
+                <span asp-validation-for="Option.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Option.Price" class="control-label"></label>
+                <input asp-for="Option.Price" class="form-control" />
+                <span asp-validation-for="Option.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Створити" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Назад до списку послуг</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
