@@ -1,0 +1,74 @@
+﻿@model Dictionary<ClientAndOrderKey, IEnumerable<ClientAndOrder>>
+
+@{
+    ViewData["Title"] = "Головна";
+}
+
+<div class="text-center">
+    <div class="row">
+        <div class="col-4">
+            <div class="list-group" id="list-tab" role="tablist">
+                @foreach (var client in Model)
+                {
+                    <a class="list-group-item list-group-item-action" id="list-@client.Key.Id-list"
+                       data-toggle="list" href="#list-@client.Key.Id" role="tab"
+                       aria-controls="@client.Key.Id">@client.Key.Name @client.Key.Surname</a>
+                }
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="tab-content" id="nav-tabContent">
+                @foreach (var client in Model)
+                {
+                    <div class="tab-pane fade" id="list-@client.Key.Id" role="tabpanel" aria-labelledby="list-@client.Key.Id-list">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Назва послуги
+                                    </th>
+                                    <th>
+                                        Дата замовлення
+                                    </th>
+                                    <th>
+                                        Дата виконанння
+                                    </th>
+                                    <th>
+                                        Ціна
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var option in client.Value)
+                                {
+                                    <tr>
+                                        <td>
+                                            @option.Option
+                                        </td>
+                                        <td>
+                                            @option.DateStart.ToShortDateString()
+                                        </td>
+                                        <td>
+                                            @option.DateFinish.ToShortDateString()
+                                        </td>
+                                        <td>
+                                            @option.Price
+                                        </td>
+                                    </tr>
+
+                                }
+                                <tr><td colspan="4">Загальна кількість замовлень: @client.Key.Count</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                }
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+

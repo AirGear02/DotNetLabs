@@ -1,0 +1,50 @@
+﻿@model Lab4.Models.Order
+
+@{
+    ViewData["Title"] = "Сторення замовлення";
+}
+
+<h3>Створити замовлення</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ClientId" class="control-label">Клієнт</label>
+                <select asp-for="ClientId" class ="form-control" asp-items="ViewBag.ClientId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="OptionId" class="control-label">Послуга</label>
+                <select asp-for="OptionId" class ="form-control" asp-items="ViewBag.OptionId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label">Кількість</label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateStart" class="control-label">Дата замолвення</label>
+                <input asp-for="DateStart" class="form-control" />
+                <span asp-validation-for="DateStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateFinish" class="control-label">Дата завершення роботи</label>
+                <input asp-for="DateFinish" class="form-control" />
+                <span asp-validation-for="DateFinish" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Створити" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Перейти до всіх замовлень</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
